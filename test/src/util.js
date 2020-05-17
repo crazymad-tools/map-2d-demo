@@ -1,4 +1,4 @@
-export function loadImage(url) {
+function loadImage(url) {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.setAttribute("crossorigin", "anonymous");
@@ -12,7 +12,7 @@ export function loadImage(url) {
   });
 }
 
-export function loadImageByBlob(url) {
+function loadImageByBlob(url) {
   return new Promise((resolve, reject) => {
     fetch(url)
       .then((res) => {

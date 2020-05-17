@@ -4,7 +4,9 @@
   "description": "2d地图的demo",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server",
+    "start": "webpack"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,15 @@
   "bugs": {
     "url": "https://github.com/crazymad-tools/map-2d-demo/issues"
   },
-  "homepage": "https://github.com/crazymad-tools/map-2d-demo#readme"
+  "homepage": "https://github.com/crazymad-tools/map-2d-demo#readme",
+  "dependencies": {
+    "css-loader": "^3.5.3",
+    "html-webpack-plugin": "^4.3.0",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.43.0",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.11"
+  }
 }
