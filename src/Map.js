@@ -1,5 +1,6 @@
 import { loadImage, loadImageByBlob } from "./util";
 import "./style/map.css";
+import Tile from "./Tile";
 
 class Map {
   constructor(options) {
@@ -110,6 +111,7 @@ class Map {
     tileRight = Math.min(xCount - 1, tileRight);
     tileTop = Math.max(0, tileTop);
     tileBottom = Math.min(yCount - 1, tileBottom);
+    console.log(tileLeft, tileRight, tileTop, tileBottom);
     return [
       [tileLeft, tileRight],
       [tileTop, tileBottom],
@@ -118,17 +120,18 @@ class Map {
 
   async load() {
     this.ranges = this.getTileRange();
-    const images = [];
     for (let x = this.ranges[0][0], i = 0; x <= this.ranges[0][1]; x++, i++) {
       for (let y = this.ranges[1][0], j = 0; y <= this.ranges[1][1]; y++, j++) {
         const url = this.url
           .replace(/{\s*z\s*}/, this.level)
           .replace(/{\s*x\s*}/, x)
           .replace(/{\s*y\s*}/, y);
-        images.push(await loadImageByBlob(url));
+        const image = await loadImageByBlob(url);
+        const tile = new Tile(image);
+        this.tiles[`${this.level},${x},${y}`] = tile;
       }
     }
-    this.renderWhole(this.ranges, images);
+    // this.renderWhole(this.ranges, images);
     this.render();
   }
 
@@ -175,27 +178,34 @@ class Map {
 
   render() {
     const singleTileRadians = this.tileRadians[this.level];
-    const left = this.ranges[0][0] * singleTileRadians;
-    const top = this.ranges[1][0] * singleTileRadians;
-    const origin = [
-      this.offset[0] - singleTileRadians,
-      this.offset[1] - singleTileRadians,
-    ];
-    const radiansOffset = [origin[0] - left, origin[1] - top];
-    const radiansPixel = this.radiansPixels[this.level];
-    const screenOffset = [
-      radiansOffset[0] * radiansPixel,
-      radiansOffset[1] * radiansPixel,
-    ];
-
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.drawImage(
-      this.dataImage,
-      screenOffset[0],
-      screenOffset[1],
-      this.wholeCanvas.width,
-      this.wholeCanvas.height
-    );
+    const ranges = this.ranges;
+    for (let i = ranges[0][0]; i <= ranges[0][1]; i++) {
+      for (let j = ranges[1][0]; j <= ranges[1][1]; j++) {
+        const tileKey =  `${this.level},${i},${j}`;
+        const tile = this.tiles[tileKey];
+        console.log(tile);
+        const left = ranges[0][0] * singleTileRadians;
+        const top = ranges[1][0] * singleTileRadians;
+        // const origin = [
+        //   this.offset[0] - singleTileRadians,
+        //   this.offset[1] - singleTileRadians,
+        // ];
+        // const radiansOffset = [origin[0] - left, origin[1] - top];
+        // const radiansPixel = this.radiansPixels[this.level];
+        // const screenOffset = [
+        //   radiansOffset[0] * radiansPixel,
+        //   radiansOffset[1] * radiansPixel,
+        // ];
+        // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // this.context.drawImage(
+        //   this.dataImage,
+        //   screenOffset[0],
+        //   screenOffset[1],
+        //   this.wholeCanvas.width,
+        //   this.wholeCanvas.height
+        // );
+      }
+    }
   }
 }
 
